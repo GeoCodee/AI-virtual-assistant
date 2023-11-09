@@ -23,7 +23,7 @@ import BotAvatar from "@/components/bot-avatar";
 const ConversationPage = () => {
   const router = useRouter();
   const [messages, setMessages] = useState<
-    OpenAI.Chat.CreateChatCompletionRequestMessage[]
+    OpenAI.Chat.ChatCompletionMessageParam[]
   >([]);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -37,7 +37,7 @@ const ConversationPage = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const userMessage: OpenAI.Chat.CreateChatCompletionRequestMessage = {
+      const userMessage: OpenAI.Chat.ChatCompletionMessageParam = {
         role: "user",
         content: values.prompt,
       };
@@ -108,9 +108,9 @@ const ConversationPage = () => {
             <Empty label="No Conversation Started" />
           )}
           <div className="flex flex-col-reverse gap-y-4">
-            {messages.map((message) => (
+            {messages.map((message, index) => (
               <div
-                key={message.content}
+                key={index}
                 className={cn(
                   "p-8 w-full flex items-start gap-x-8 rounded-lg",
                   message.role === "user"
