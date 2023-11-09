@@ -59,6 +59,12 @@ const ConversationPage = () => {
     console.log(values);
   };
 
+  const renderMessageContent = (
+    content: string | React.ReactNode
+  ): React.ReactNode => {
+    return typeof content === "string" ? content : <>{content}</>;
+  };
+
   return (
     <div>
       <Heading
@@ -119,7 +125,11 @@ const ConversationPage = () => {
                 )}
               >
                 {message.role === "user" ? <UserAvatar /> : <BotAvatar />}
-                <p className="text-sm">{message.content}</p>
+                <p className="text-sm">
+                  {typeof message.content === "string"
+                    ? message.content
+                    : "Content of the message is not a string"}
+                </p>
               </div>
             ))}
           </div>
