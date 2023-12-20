@@ -3,7 +3,7 @@
 import axios from "axios";
 import * as z from "zod";
 import Heading from "@/components/heading";
-import { MessageSquare } from "lucide-react";
+// import { MessageSquare } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { formSchema } from "./constants";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -20,8 +20,10 @@ import { cn } from "@/lib/utils";
 import UserAvatar from "@/components/user-avatar";
 import BotAvatar from "@/components/bot-avatar";
 import { Textarea } from "@/components/ui/textarea";
+import { Code } from "lucide-react";
+import ReactMarkdown from "react-markdown";
 
-const ConversationPage = () => {
+const CodePage = () => {
   const router = useRouter();
   const [messages, setMessages] = useState<
     OpenAI.Chat.ChatCompletionMessageParam[]
@@ -45,7 +47,7 @@ const ConversationPage = () => {
 
       const newMessages = [...messages, userMessage];
 
-      const response = await axios.post("/api/conversation", {
+      const response = await axios.post("/api/code", {
         messages: newMessages,
       });
 
@@ -69,11 +71,11 @@ const ConversationPage = () => {
   return (
     <div>
       <Heading
-        title="Conversation"
-        description="Chat with AI"
-        icon={MessageSquare}
-        iconColor="text-violet-500"
-        bgColor="bg-violet-500/10"
+        title="Code Generation"
+        description="Generate Code using text"
+        icon={Code}
+        iconColor="text-green-700"
+        bgColor="bg-green-700/10"
       />
 
       <div className="px-4 lg:p-8">
@@ -90,7 +92,7 @@ const ConversationPage = () => {
                     <Input
                       className="border-0 outline-none focus-visible:ring-0 focus-visible:ring-transparent"
                       disabled={isLoading}
-                      placeholder="Hello!"
+                      placeholder="Simple toggle button using react hooks."
                       {...field}
                     />
                     {/* <Textarea
@@ -133,10 +135,31 @@ const ConversationPage = () => {
                 )}
               >
                 {message.role === "user" ? <UserAvatar /> : <BotAvatar />}
-                <div className="text-sm">
-                  {typeof message.content === "string"
-                    ? message.content
-                    : "not a string"}
+                <div>
+                  {/* className="text-sm" */}
+                  {typeof message.content === "string" ? (
+                    <ReactMarkdown
+                      components={{
+                        pre: ({ node, ...props }) => (
+                          <div className="overflow-auto w-full my-2 bg-black/10 p-2 rounded-lg">
+                            <pre {...props} />
+                          </div>
+                        ),
+                        code: ({ node, ...props }) => (
+                          <code
+                            className="bg-black/10 rounded-lg p-1"
+                            {...props}
+                          ></code>
+                        ),
+                      }}
+                      className="text-sm leading-7"
+                      // overflow-hidden
+                    >
+                      {message.content || ""}
+                    </ReactMarkdown>
+                  ) : (
+                    "not a string"
+                  )}
                 </div>
               </div>
             ))}
@@ -147,4 +170,4 @@ const ConversationPage = () => {
   );
 };
 
-export default ConversationPage;
+export default CodePage;

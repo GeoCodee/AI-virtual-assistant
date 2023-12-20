@@ -2,10 +2,17 @@ import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
 import OpenAI from "openai";
+import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
+
+const instructionMessage: ChatCompletionMessageParam = {
+  role: "system",
+  content:
+    "You are a code generator, you must answer only in markdown code snippets. Use code comments in explnations.",
+};
 
 export async function POST(req: Request) {
   try {
@@ -28,7 +35,7 @@ export async function POST(req: Request) {
     const response = await openai.chat.completions.create({
       // model: "gpt-3.5-turbo",
       model: "gpt-4-1106-preview",
-      messages,
+      messages: [instructionMessage, ...messages],
     });
 
     return NextResponse.json(response.choices[0].message);
