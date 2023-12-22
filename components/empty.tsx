@@ -10,7 +10,9 @@ const Empty = ({ label }: EmptyProps) => {
       <div className="relative h-72 w-72">
         <Image alt="empty" fill src={"/empty.png"}></Image>
       </div>
-      <p className="text-muted-foreground text-sm text-center"></p>
+      <p className="text-muted-foreground text-sm text-center">
+        No Conversation Started
+      </p>
     </div>
   );
 };
