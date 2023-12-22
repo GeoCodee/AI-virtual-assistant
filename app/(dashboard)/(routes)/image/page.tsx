@@ -5,7 +5,12 @@ import * as z from "zod";
 import Heading from "@/components/heading";
 import { Download, ImageIcon, MessageSquare } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { amountOptions, formSchema, resolutionOptions } from "./constants";
+import {
+  amountOptions,
+  formSchema,
+  qualityOptions,
+  resolutionOptions,
+} from "./constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -40,7 +45,8 @@ const ImagePage = () => {
     defaultValues: {
       prompt: "",
       amount: "1",
-      resolution: "512x512",
+      resolution: "1024x1024",
+      quality: "standard",
     },
   });
 
@@ -154,6 +160,34 @@ const ImagePage = () => {
                     </FormControl>
                     <SelectContent>
                       {resolutionOptions.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </FormItem>
+              )}
+            ></FormField>
+
+            <FormField
+              control={form.control}
+              name="quality"
+              render={({ field }) => (
+                <FormItem className="col-span-12 lg:col-span-2">
+                  <Select
+                    disabled={isLoading}
+                    onValueChange={field.onChange}
+                    value={field.value}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue defaultValue={field.value}></SelectValue>
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {qualityOptions.map((option) => (
                         <SelectItem key={option.value} value={option.value}>
                           {option.label}
                         </SelectItem>

@@ -6,7 +6,19 @@ export const formSchema = z.object({
   }),
   amount: z.string().min(1),
   resolution: z.string().min(1),
+  quality: z.string().min(1),
 });
+
+export const qualityOptions = [
+  {
+    value: "standard",
+    label: "Standard",
+  },
+  {
+    value: "hd",
+    label: "HD",
+  },
+];
 
 export const amountOptions = [
   {
@@ -33,15 +45,15 @@ export const amountOptions = [
 
 export const resolutionOptions = [
   {
-    value: "256x256",
-    label: "256x256",
-  },
-  {
-    value: "512x512",
-    label: "512x512",
-  },
-  {
     value: "1024x1024",
     label: "1024x1024",
+  },
+  {
+    value: "1024x1792",
+    label: "1024x1792",
+  },
+  {
+    value: "1792x1024",
+    label: "1792x1024",
   },
 ];
