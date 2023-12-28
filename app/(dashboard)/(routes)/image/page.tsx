@@ -44,7 +44,7 @@ const ImagePage = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       prompt: "",
-      amount: "1",
+      n: "1",
       resolution: "1024x1024",
       quality: "standard",
     },
@@ -55,12 +55,26 @@ const ImagePage = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       setImages([]);
-      const response = await axios.post("/api/image", values);
+      let allImages: string[] = [];
 
-      const urls = response.data.map((image: { url: string }) => image.url);
+      //Since dall-e-3 api only accept n:1
+      //I need to create a new object so I can generate multiple images
+      const submitValues = {
+        prompt: values.prompt,
+        n: 1,
+        resolution: values.resolution,
+        quality: values.quality,
+      };
 
-      setImages(urls);
+      for (let i = 1; i <= parseInt(values.n); i++) {
+        const response = await axios.post("/api/image", submitValues);
 
+        const urls = response.data.map((image: { url: string }) => image.url);
+
+        allImages = allImages.concat(urls);
+      }
+
+      setImages(allImages);
       form.reset();
     } catch (error: any) {
       console.log(error);
@@ -116,7 +130,7 @@ const ImagePage = () => {
             />
             <FormField
               control={form.control}
-              name="amount"
+              name="n"
               render={({ field }) => (
                 <FormItem className="col-span-12 lg:col-span-2">
                   <Select
